@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartLeave AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══════════════════ NAVBAR ══════════════════ -->
+<header class="navbar">
+  <div class="logo">
+    <div class="logo-box">S</div>
+    <span>SmartLeave AI</span>
+  </div>
+  <nav class="nav-links hidden" id="appNav">
+    <a href="#" class="nav-link active" data-section="dashboard">Dashboard</a>
+    <a href="#" class="nav-link" data-section="leaveRequest">Leave Request</a>
+    <a href="#" class="nav-link" data-section="workload">Workload</a>
+    <a href="#" class="nav-link manager-only hidden" data-section="managerDash">Manager</a>
+    <a href="#" class="nav-link" data-section="leaveHistory">History</a>
+  </nav>
+  <div class="nav-buttons">
+    <span class="user-badge hidden" id="userBadge"></span>
+    <button id="logoutBtn" class="logout-btn hidden">Logout</button>
+    <button id="loginBtn" class="login-btn">Login</button>
+  </div>
+</header>
+
+<!-- ══════════════════ LANDING PAGE ══════════════════ -->
+<div id="landingPage">
+
+  <section class="hero">
+    <h1>Automated Leave &amp; Workload Management</h1>
+    <p>AI-powered leave management, attendance tracking, and intelligent workload balancing.</p>
+
+    <div class="carousel">
+      <button class="arrow left">&#10094;</button>
+      <div class="carousel-track">
+        <div class="slide">
+          <h3>&#128100; Team Availability</h3>
+          <p>Instant visibility into team schedules and capacity planning.</p>
+        </div>
+        <div class="slide">
+          <h3>&#9989; Leave Approval</h3>
+          <p>Automatically approve leave requests based on workload.</p>
+        </div>
+        <div class="slide">
+          <h3>&#129302; Smart Workload Planning</h3>
+          <p>Balance tasks intelligently across teams using AI.</p>
+        </div>
+      </div>
+      <button class="arrow right">&#10095;</button>
+      <div class="dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    <button class="cta-btn" id="ctaBtn">Get Started Free</button>
+  </section>
+
+  <section class="features">
+    <h2>Key Features</h2>
+    <div class="feature-grid">
+      <div class="feature-card" data-open="dashboard">
+        <div class="fc-icon">&#128100;</div>
+        <div class="fc-title">Employee Dashboard</div>
+        <div class="fc-desc">View your leave balance, upcoming holidays and quick stats.</div>
+      </div>
+      <div class="feature-card" data-open="leaveRequest">
+        <div class="fc-icon">&#128203;</div>
+        <div class="fc-title">Leave Request Portal</div>
+        <div class="fc-desc">Submit, track and manage your leave applications.</div>
+      </div>
+      <div class="feature-card" data-open="workload">
+        <div class="fc-icon">&#129302;</div>
+        <div class="fc-title">Workload Analyzer</div>
+        <div class="fc-desc">AI-driven insights into team capacity and task distribution.</div>
+      </div>
+      <div class="feature-card" data-open="managerDash">
+        <div class="fc-icon">&#128202;</div>
+        <div class="fc-title">Manager Dashboard</div>
+        <div class="fc-desc">Approve requests and monitor team availability in real-time.</div>
+      </div>
+      <div class="feature-card" data-open="leaveHistory">
+        <div class="fc-icon">&#128336;</div>
+        <div class="fc-title">Leave History</div>
+        <div class="fc-desc">Full audit trail of all past leave records and decisions.</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════ APP SECTIONS ══════════════════ -->
+<div id="appContainer" class="hidden">
+
+  <!-- ── 1. EMPLOYEE DASHBOARD ── -->
+  <section id="sec-dashboard" class="app-section active-section">
+    <div class="section-header">
+      <h2>&#128100; Employee Dashboard</h2>
+      <p class="section-sub">Welcome back, <strong id="dashUserName">User</strong>!</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">&#127774;</div>
+        <div class="stat-info">
+          <div class="stat-num" id="annualBalance">18</div>
+          <div class="stat-label">Annual Leave Left</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#129297;</div>
+        <div class="stat-info">
+          <div class="stat-num" id="sickBalance">8</div>
+          <div class="stat-label">Sick Days Left</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#9203;</div>
+        <div class="stat-info">
+          <div class="stat-num" id="pendingCount">0</div>
+          <div class="stat-label">Pending Requests</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#9989;</div>
+        <div class="stat-info">
+          <div class="stat-num" id="approvedCount">0</div>
+          <div class="stat-label">Approved This Year</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="dash-card">
+        <h3>&#128197; Upcoming Holidays</h3>
+        <ul class="holiday-list" id="holidayList"></ul>
+      </div>
+      <div class="dash-card">
+        <h3>&#128338; Recent Activity</h3>
+        <ul class="activity-list" id="activityList">
+          <li class="empty-msg">No recent activity.</li>
+        </ul>
+      </div>
+      <div class="dash-card">
+        <h3>&#128101; Team Status Today</h3>
+        <ul class="team-list" id="teamList"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 2. LEAVE REQUEST PORTAL ── -->
+  <section id="sec-leaveRequest" class="app-section">
+    <div class="section-header">
+      <h2>&#128203; Leave Request Portal</h2>
+      <p class="section-sub">Submit a new leave application below.</p>
+    </div>
+
+    <div class="form-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Leave Type</label>
+          <select id="leaveType">
+            <option value="annual">Annual Leave</option>
+            <option value="sick">Sick Leave</option>
+            <option value="emergency">Emergency Leave</option>
+            <option value="unpaid">Unpaid Leave</option>
+            <option value="maternity">Maternity / Paternity</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Priority</label>
+          <select id="leavePriority">
+            <option value="normal">Normal</option>
+            <option value="urgent">Urgent</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="date" id="leaveStart">
+        </div>
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="date" id="leaveEnd">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Reason</label>
+        <textarea id="leaveReason" rows="4" placeholder="Briefly describe your reason for leave..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Cover Arrangement <span class="optional">(optional)</span></label>
+        <input type="text" id="leaveCover" placeholder="Who will cover your responsibilities?">
+      </div>
+      <div class="duration-preview" id="durationPreview"></div>
+      <button class="primary-btn" id="submitLeaveBtn">&#128228; Submit Request</button>
+    </div>
+
+    <div class="table-card" style="margin-top:32px">
+      <h3>My Active Requests</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Priority</th><th>Status</th><th>Action</th></tr>
+          </thead>
+          <tbody id="myRequestsBody">
+            <tr><td colspan="7" class="empty-msg">No requests yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. WORKLOAD ANALYZER ── -->
+  <section id="sec-workload" class="app-section">
+    <div class="section-header">
+      <h2>&#129302; Workload Analyzer</h2>
+      <p class="section-sub">AI-powered team capacity and task distribution insights.</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">&#128101;</div>
+        <div class="stat-info">
+          <div class="stat-num" id="wl-active">5</div>
+          <div class="stat-label">Active Members</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#127968;</div>
+        <div class="stat-info">
+          <div class="stat-num" id="wl-leave">0</div>
+          <div class="stat-label">On Leave Today</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#9989;</div>
+        <div class="stat-info">
+          <div class="stat-num" id="wl-tasks">24</div>
+          <div class="stat-label">Tasks This Week</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#9889;</div>
+        <div class="stat-info">
+          <div class="stat-num" id="wl-risk">Low</div>
+          <div class="stat-label">AI Risk Level</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="dash-card span2">
+        <h3>Member Workload Breakdown</h3>
+        <div id="memberWorkloadList"></div>
+      </div>
+      <div class="dash-card">
+        <h3>&#129302; AI Recommendation</h3>
+        <div id="aiRecommendation" class="ai-rec-box">Analyzing team data...</div>
+      </div>
+    </div>
+
+    <div class="dash-card" style="margin-top:24px">
+      <h3>&#128200; Team Capacity Over Time</h3>
+      <div class="capacity-chart" id="capacityChart"></div>
+    </div>
+  </section>
+
+  <!-- ── 4. MANAGER DASHBOARD ── -->
+  <section id="sec-managerDash" class="app-section">
+    <div class="section-header">
+      <h2>&#128202; Manager Dashboard</h2>
+      <p class="section-sub">Review and action all pending leave requests.</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">&#9203;</div>
+        <div class="stat-info">
+          <div class="stat-num" id="mgr-pending">0</div>
+          <div class="stat-label">Awaiting Approval</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#9989;</div>
+        <div class="stat-info">
+          <div class="stat-num" id="mgr-approved">0</div>
+          <div class="stat-label">Approved</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#10060;</div>
+        <div class="stat-info">
+          <div class="stat-num" id="mgr-rejected">0</div>
+          <div class="stat-label">Rejected</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#128101;</div>
+        <div class="stat-info">
+          <div class="stat-num" id="mgr-team">5</div>
+          <div class="stat-label">Team Members</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-top-row">
+        <h3>All Leave Requests</h3>
+        <select id="mgrFilter">
+          <option value="all">All</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Priority</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="mgrTableBody">
+            <tr><td colspan="8" class="empty-msg">No requests found.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 5. LEAVE HISTORY ── -->
+  <section id="sec-leaveHistory" class="app-section">
+    <div class="section-header">
+      <h2>&#128336; Leave History</h2>
+      <p class="section-sub">Complete audit trail of all your leave records.</p>
+    </div>
+
+    <div class="filter-row">
+      <select id="historyFilter">
+        <option value="all">All Status</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+        <option value="pending">Pending</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <select id="historyYear">
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+      </select>
+      <button class="outline-btn" id="exportBtn">&#128196; Export CSV</button>
+    </div>
+
+    <div class="table-card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Status</th><th>Decided</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody">
+            <tr><td colspan="7" class="empty-msg">No history yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /appContainer -->
+
+<!-- ══════════════════ AUTH MODAL ══════════════════ -->
+<div class="modal" id="authModal">
+  <div class="modal-content">
+
+    <div id="loginForm">
+      <h2>Welcome Back</h2>
+      <p class="modal-sub">Sign in to your SmartLeave account</p>
+      <input id="loginEmail" type="email"    placeholder="Email address">
+      <input id="loginPass"  type="password" placeholder="Password">
+      <select id="loginRole">
+        <option value="employee">Employee</option>
+        <option value="manager">Manager</option>
+      </select>
+      <button id="loginSubmit" class="primary-btn">Login</button>
+      <p id="showSignup" class="switch-link">Don't have an account? <strong>Create one</strong></p>
+    </div>
+
+    <div id="signupForm" class="hidden">
+      <h2>Create Account</h2>
+      <p class="modal-sub">Join SmartLeave AI today</p>
+      <input id="signupUsername" type="text"     placeholder="Full name">
+      <input id="signupEmail"    type="email"    placeholder="Email address">
+      <input id="signupPass"     type="password" placeholder="Password (min 6 chars)">
+      <input id="signupRepass"   type="password" placeholder="Re-enter password">
+      <select id="signupRole">
+        <option value="employee">Employee</option>
+        <option value="manager">Manager</option>
+      </select>
+      <button id="signupSubmit" class="primary-btn">Create Account</button>
+      <p id="showLogin" class="switch-link">Already have an account? <strong>Login</strong></p>
+    </div>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
